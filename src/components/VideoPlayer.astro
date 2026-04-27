@@ -47,10 +47,10 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
   >
     <div class="flex flex-col items-center gap-3 mt-auto mb-10">
       <div
-        class="w-16 h-16 rounded-full flex items-center justify-center text-2xl"
-        style="background: var(--color-accent); box-shadow: 0 0 0 6px rgba(234,102,50,0.25);"
+        class="w-16 h-16 rounded-full flex items-center justify-center"
+        style="background: var(--color-accent); box-shadow: 0 0 0 6px rgba(234,102,50,0.25); font-size: 1.5rem;"
       >
-        🔊
+        <i class="fa-solid fa-volume-high" style="color: #fff;"></i>
       </div>
       <span
         class="text-xs uppercase tracking-[0.25em] font-semibold px-4 py-1.5 rounded-full"
@@ -69,10 +69,10 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
   >
     <div class="flex flex-col items-center gap-3">
       <div
-        class="w-16 h-16 rounded-full flex items-center justify-center text-2xl"
-        style="background: var(--color-accent); box-shadow: 0 0 0 6px rgba(234,102,50,0.25);"
+        class="w-16 h-16 rounded-full flex items-center justify-center"
+        style="background: var(--color-accent); box-shadow: 0 0 0 6px rgba(234,102,50,0.25); font-size: 1.5rem;"
       >
-        ↩
+        <i class="fa-solid fa-rotate-left" style="color: #fff;"></i>
       </div>
       <span
         class="text-xs uppercase tracking-[0.25em] font-semibold px-4 py-1.5 rounded-full"
@@ -90,7 +90,7 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
       style="background: rgba(14,11,11,0.75); color: var(--color-fg); border: 1px solid var(--color-border);"
       aria-label="Restart video"
     >
-      ↩
+      <i class="fa-solid fa-rotate-left"></i>
     </button>
     <!-- Mute toggle -->
     <button
@@ -100,7 +100,7 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
       aria-label="Unmute video"
       aria-pressed="false"
     >
-      <span id={`${videoId}-icon`}>🔇</span>
+      <i id={`${videoId}-icon`} class="fa-solid fa-volume-xmark"></i>
       <span>Sound</span>
     </button>
   </div>
@@ -134,7 +134,7 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
 
   function unmute() {
     video.muted = false;
-    icon.textContent = '🔊';
+    icon.className = 'fa-solid fa-volume-high';
     btn.setAttribute('aria-pressed', 'true');
     btn.setAttribute('aria-label', 'Mute video');
     if (overlay) overlay.style.display = 'none';
@@ -173,7 +173,7 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
     if (overlay) overlay.style.display = 'none';
     video.muted = !video.muted;
     const muted = video.muted;
-    icon.textContent = muted ? '🔇' : '🔊';
+    icon.className = muted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
     btn.setAttribute('aria-pressed', String(!muted));
     btn.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
   });
