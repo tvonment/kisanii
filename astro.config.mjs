@@ -3,7 +3,8 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://kisanii.ch',
+  site: 'https://tvonment.github.io',
+  base: '/kisanii',
   integrations: [
     sitemap({
       filter: (page) => {
