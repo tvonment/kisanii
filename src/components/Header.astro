@@ -1,5 +1,5 @@
 ---
-import { t, getAlternatePath, type Lang } from '../i18n/ui';
+import { t, withBase, getAlternatePath, type Lang } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -10,9 +10,9 @@ const { lang, currentPath } = Astro.props;
 const alternatePath = getAlternatePath(currentPath, lang === 'de' ? 'en' : 'de');
 
 const navLinks = [
-  { key: 'nav.news' as const, href: lang === 'de' ? '/#aktuelles' : '/en/#news' },
-  { key: 'nav.live' as const, href: lang === 'de' ? '/#live' : '/en/#live' },
-  { key: 'nav.contact' as const, href: lang === 'de' ? '/#kontakt' : '/en/#contact' },
+  { key: 'nav.news' as const, href: withBase(lang === 'de' ? '/#aktuelles' : '/en/#news') },
+  { key: 'nav.live' as const, href: withBase(lang === 'de' ? '/#live' : '/en/#live') },
+  { key: 'nav.contact' as const, href: withBase(lang === 'de' ? '/#kontakt' : '/en/#contact') },
 ];
 ---
 
@@ -24,7 +24,7 @@ const navLinks = [
     <nav class="flex items-center justify-between h-16" aria-label="Main navigation">
       <!-- Wordmark -->
       <a
-        href={lang === 'de' ? '/' : '/en/'}
+        href={withBase(lang === 'de' ? '/' : '/en/')}
         class="font-display text-xl font-bold tracking-widest uppercase"
         style="letter-spacing: 0.2em;"
         aria-label="KISANII – Home"
@@ -47,14 +47,6 @@ const navLinks = [
             </li>
           ))
         }
-        <li>
-          <a
-            href={lang === 'de' ? '/epk' : '/en/epk'}
-            class="btn btn-outline text-xs"
-          >
-            {t(lang, 'nav.epk')}
-          </a>
-        </li>
       </ul>
 
       <!-- Desktop lang switch + Mobile menu button -->
@@ -102,15 +94,6 @@ const navLinks = [
             </li>
           ))
         }
-        <li>
-          <a
-            href={lang === 'de' ? '/epk' : '/en/epk'}
-            class="block hover:text-accent transition-colors"
-            style="color: var(--color-accent);"
-          >
-            {t(lang, 'nav.epk')}
-          </a>
-        </li>
       </ul>
       <a
         href={alternatePath}

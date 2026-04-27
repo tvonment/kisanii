@@ -149,16 +149,29 @@ export function t(lang: Lang, key: UIKey): string {
   return ui[lang][key];
 }
 
+export function withBase(path: string): string {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return base + path;
+}
+
 export function getLangFromUrl(url: URL): Lang {
-  const [, lang] = url.pathname.split('/');
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const pathname =
+    base && url.pathname.startsWith(base) ? url.pathname.slice(base.length) || '/' : url.pathname;
+  const [, lang] = pathname.split('/');
   if (lang === 'en') return 'en';
   return 'de';
 }
 
 export function getAlternatePath(currentPath: string, targetLang: Lang): string {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const path =
+    base && currentPath.startsWith(base) ? currentPath.slice(base.length) || '/' : currentPath;
+  let result: string;
   if (targetLang === 'en') {
-    return currentPath.startsWith('/en') ? currentPath : `/en${currentPath}`;
+    result = path.startsWith('/en') ? path : `/en${path}`;
   } else {
-    return currentPath.startsWith('/en') ? currentPath.replace(/^\/en/, '') || '/' : currentPath;
+    result = path.startsWith('/en') ? path.replace(/^\/en/, '') || '/' : path;
   }
+  return base + result;
 }

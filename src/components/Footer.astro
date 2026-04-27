@@ -1,5 +1,5 @@
 ---
-import { t, type Lang } from '../i18n/ui';
+import { t, withBase, type Lang } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
@@ -48,7 +48,7 @@ const socials = [
     <!-- Socials row -->
     <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
       <a
-        href="/"
+        href={withBase(lang === 'de' ? '/' : '/en/')}
         class="font-display text-lg font-bold tracking-widest uppercase"
         style="letter-spacing: 0.2em;"
       >

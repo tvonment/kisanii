@@ -6,25 +6,32 @@ interface Props {
    */
   src: string;
   poster?: string;
+  /** Path to a WebVTT subtitle file, e.g. "/video/epk.en.vtt" */
+  trackSrc?: string;
   class?: string;
 }
 
-const { src, poster, class: className } = Astro.props;
-const webmSrc = src.replace(/\.mp4$/, '.webm');
+const { src, poster, trackSrc, class: className } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const srcWithBase = base + src;
+const webmSrcWithBase = base + src.replace(/\.mp4$/, '.webm');
+const trackSrcWithBase = trackSrc ? base + trackSrc : undefined;
 const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
 ---
 
 <div class:list={['video-wrapper', className]}>
   <video
     id={videoId}
+    autoplay
     muted
     playsinline
     preload="metadata"
     poster={poster}
     aria-label="EPK video"
   >
-    <source src={webmSrc} type="video/webm" />
-    <source src={src} type="video/mp4" />
+    <source src={webmSrcWithBase} type="video/webm" />
+    <source src={srcWithBase} type="video/mp4" />
+    {trackSrcWithBase && <track kind="subtitles" src={trackSrcWithBase} srclang="en" label="English" default />}
   </video>
 
   <!-- Unmute toggle -->

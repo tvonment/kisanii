@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { t } from '../../../i18n/ui';
+import { t, withBase } from '../../../i18n/ui';
 
 export async function getStaticPaths() {
   const entries = await getCollection('newsEN');
@@ -26,7 +26,7 @@ const formattedDate = entry.data.date.toLocaleDateString('en-GB', {
   <article class="section-gap">
     <div class="site-container max-w-2xl">
       <a
-        href="/en/#news"
+        href={withBase('/en/#news')}
         class="inline-flex items-center gap-2 text-xs uppercase tracking-widest mb-8 transition-colors hover:text-accent"
         style="color: var(--color-fg-muted);"
       >
