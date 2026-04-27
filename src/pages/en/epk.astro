@@ -7,33 +7,6 @@ import { t } from '../../i18n/ui';
 import { upcomingConcerts, pastConcerts } from '../../data/concerts';
 
 const lang = 'en';
-
-const releases = [
-  {
-    title: 'Cycle',
-    type: 'EP · 3 Tracks',
-    year: '2025',
-    seed: 'kisanii-cycle',
-    link: 'https://open.spotify.com/artist/7jMnqSsKuIzLzjgIPtgbwu',
-    linkLabel: 'Listen on Spotify →',
-  },
-  {
-    title: 'Tailwind',
-    type: 'Single',
-    year: '2024',
-    seed: 'kisanii-tailwind',
-    link: 'https://open.spotify.com/artist/7jMnqSsKuIzLzjgIPtgbwu',
-    linkLabel: 'Listen on Spotify →',
-  },
-  {
-    title: 'Victress',
-    type: 'Single + Music Video',
-    year: '2024',
-    seed: 'kisanii-victress',
-    link: 'https://www.youtube.com/@kisanii4729',
-    linkLabel: 'Watch on YouTube →',
-  },
-];
 ---
 
 <BaseLayout
@@ -54,14 +27,14 @@ const releases = [
           {t(lang, 'epk.subtitle')}
         </p>
       </div>
-      <VideoPlayer src="/video/epk.mp4" trackSrc="/video/epk.en.vtt" class="max-w-4xl mx-auto" />
+      <VideoPlayer src="/video/epk.mp4" trackSrc="/video/epk.en.vtt" class="max-w-4xl mx-auto" lang="en" />
     </div>
   </section>
 
   <!-- ── KEY FACTS ──────────────────────────────────────────── -->
   <section style="background: var(--color-surface);">
     <div class="site-container py-8">
-      <dl class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+      <dl class="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
         {
           [
             { label: 'Origin', value: 'Switzerland' },
@@ -70,9 +43,7 @@ const releases = [
             { label: 'Label', value: 'Independent' },
           ].map(({ label, value }) => (
             <div class="flex flex-col gap-1">
-              <dt class="text-xs uppercase tracking-widest" style="color: var(--color-fg-muted);">
-                {label}
-              </dt>
+              <dt class="text-xs uppercase tracking-widest" style="color: var(--color-fg-muted);">{label}</dt>
               <dd class="font-display text-lg font-semibold">{value}</dd>
             </div>
           ))
@@ -85,7 +56,7 @@ const releases = [
   <section class="section-gap">
     <div class="site-container">
       <SectionHeading text={t(lang, 'section.bio')} />
-      <div class="grid md:grid-cols-2 gap-12 max-w-4xl items-start">
+      <div class="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto items-start">
         <div class="flex flex-col gap-5">
           <p class="text-base leading-relaxed" style="color: var(--color-fg-muted);">
             {t(lang, 'bio.text')}
@@ -98,21 +69,9 @@ const releases = [
             April 2025.
           </p>
           <div class="flex flex-wrap gap-3 mt-1">
-            <a
-              href="https://open.spotify.com/artist/7jMnqSsKuIzLzjgIPtgbwu"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-outline text-xs">Spotify</a>
-            <a
-              href="https://music.apple.com/nl/artist/kisanii/1727114509"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-outline text-xs">Apple Music</a>
-            <a
-              href="https://www.instagram.com/kisanii.music/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-outline text-xs">Instagram</a>
+            <a href="https://open.spotify.com/artist/7jMnqSsKuIzLzjgIPtgbwu" target="_blank" rel="noopener noreferrer" class="btn btn-outline text-xs">Spotify</a>
+            <a href="https://music.apple.com/nl/artist/kisanii/1727114509" target="_blank" rel="noopener noreferrer" class="btn btn-outline text-xs">Apple Music</a>
+            <a href="https://www.instagram.com/kisanii.music/" target="_blank" rel="noopener noreferrer" class="btn btn-outline text-xs">Instagram</a>
           </div>
         </div>
         <div class="relative rounded-lg overflow-hidden" style="aspect-ratio: 3/4;">
@@ -122,10 +81,7 @@ const releases = [
             class="w-full h-full object-cover"
             loading="lazy"
           />
-          <p
-            class="absolute bottom-3 right-3 text-xs px-2 py-1 rounded"
-            style="background: rgba(14,11,11,0.75); color: var(--color-fg-muted);"
-          >
+          <p class="absolute bottom-3 right-3 text-xs px-2 py-1 rounded" style="background: rgba(14,11,11,0.75); color: var(--color-fg-muted);">
             Press photo coming soon
           </p>
         </div>
@@ -136,37 +92,37 @@ const releases = [
   <!-- ── MUSIC ──────────────────────────────────────────────── -->
   <section class="section-gap" style="background: var(--color-surface);">
     <div class="site-container">
-      <SectionHeading text="Music" />
-      <div class="grid sm:grid-cols-3 gap-6 max-w-3xl">
-        {
-          releases.map(({ title, type, year, seed, link, linkLabel }) => (
-            <div class="card overflow-hidden flex flex-col">
-              <div class="overflow-hidden" style="aspect-ratio: 1;">
-                <img
-                  src={`https://picsum.photos/seed/${seed}/400/400`}
-                  alt={`${title} – Artwork placeholder`}
-                  class="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <div class="p-4 flex flex-col gap-1 flex-1">
-                <p class="text-xs uppercase tracking-widest" style="color: var(--color-fg-muted);">
-                  {type} · {year}
-                </p>
-                <h3 class="font-display text-lg font-semibold">{title}</h3>
-                <a
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-xs mt-auto pt-3 transition-colors"
-                  style="color: var(--color-fg-muted);"
-                >
-                  {linkLabel}
-                </a>
-              </div>
-            </div>
-          ))
-        }
+      <SectionHeading text={t(lang, 'section.music')} />
+      <div class="max-w-2xl mx-auto flex flex-col gap-6">
+        <!-- Spotify embed -->
+        <div>
+          <p class="text-xs uppercase tracking-widest mb-3" style="color: var(--color-fg-muted);">Spotify</p>
+          <iframe
+            style="border-radius: 12px;"
+            src="https://open.spotify.com/embed/artist/7jMnqSsKuIzLzjgIPtgbwu?utm_source=generator&theme=0"
+            width="100%"
+            height="352"
+            frameborder="0"
+            allowfullscreen
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+            title="Kisanii on Spotify"
+          ></iframe>
+        </div>
+        <!-- Apple Music embed -->
+        <div>
+          <p class="text-xs uppercase tracking-widest mb-3" style="color: var(--color-fg-muted);">Apple Music</p>
+          <iframe
+            allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+            frameborder="0"
+            height="450"
+            style="width: 100%; overflow: hidden; border-radius: 10px;"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+            src="https://embed.music.apple.com/nl/artist/kisanii/1727114509"
+            title="Kisanii on Apple Music"
+            loading="lazy"
+          ></iframe>
+        </div>
       </div>
     </div>
   </section>
@@ -177,7 +133,7 @@ const releases = [
       <SectionHeading text="Press & Media" />
 
       <blockquote
-        class="card p-8 max-w-2xl mb-12 border-l-4"
+        class="card p-8 max-w-2xl mx-auto mb-12 border-l-4"
         style="border-left-color: var(--color-accent);"
       >
         <p class="font-display text-xl font-medium leading-relaxed mb-4">
@@ -191,7 +147,7 @@ const releases = [
       <h3 class="text-xs uppercase tracking-widest mb-4" style="color: var(--color-fg-muted);">
         Press photos — hi-res images coming soon
       </h3>
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl">
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
         {
           ['a', 'b', 'c'].map((s) => (
             <div class="rounded-lg overflow-hidden" style="aspect-ratio: 1;">
@@ -212,25 +168,25 @@ const releases = [
   <section class="section-gap" style="background: var(--color-surface);">
     <div class="site-container">
       <SectionHeading text="Live" />
-      {
-        upcomingConcerts.length > 0 && (
-          <div class="mb-10">
-            <h3 class="text-xs uppercase tracking-widest mb-4" style="color: var(--color-fg-muted);">
-              Upcoming
-            </h3>
-            <div>
-              {upcomingConcerts.map((c) => (
-                <ConcertRow concert={c} lang={lang} />
-              ))}
+      <div class="max-w-3xl mx-auto">
+        {
+          upcomingConcerts.length > 0 && (
+            <div class="mb-10">
+              <h3 class="text-xs uppercase tracking-widest mb-4" style="color: var(--color-fg-muted);">
+                Upcoming
+              </h3>
+              <div>
+                {upcomingConcerts.map((c) => <ConcertRow concert={c} lang={lang} />)}
+              </div>
             </div>
-          </div>
-        )
-      }
-      <h3 class="text-xs uppercase tracking-widest mb-4" style="color: var(--color-fg-muted);">
-        Past Shows (selection)
-      </h3>
-      <div>
-        {pastConcerts.slice(0, 8).map((c) => <ConcertRow concert={c} lang={lang} />)}
+          )
+        }
+        <h3 class="text-xs uppercase tracking-widest mb-4" style="color: var(--color-fg-muted);">
+          Past Shows (selection)
+        </h3>
+        <div>
+          {pastConcerts.slice(0, 8).map((c) => <ConcertRow concert={c} lang={lang} />)}
+        </div>
       </div>
     </div>
   </section>
@@ -239,7 +195,7 @@ const releases = [
   <section class="section-gap">
     <div class="site-container">
       <SectionHeading text={t(lang, 'epk.booking')} />
-      <div class="card p-8 max-w-2xl flex flex-col gap-6">
+      <div class="card p-8 max-w-2xl mx-auto flex flex-col gap-6">
         <p class="text-base leading-relaxed" style="color: var(--color-fg-muted);">
           For booking enquiries, interviews, hi-res press photos and any other information,
           the Kisanii team is happy to help.
@@ -247,21 +203,11 @@ const releases = [
         <div class="grid sm:grid-cols-2 gap-6">
           <div class="flex flex-col gap-1">
             <span class="text-xs uppercase tracking-widest" style="color: var(--color-fg-muted);">Booking</span>
-            <a
-              href="mailto:booking@kisanii.ch"
-              class="font-semibold transition-colors"
-              style="color: var(--color-fg);"
-            >booking@kisanii.ch</a>
+            <a href="mailto:booking@kisanii.ch" class="font-semibold transition-colors" style="color: var(--color-fg);">booking@kisanii.ch</a>
           </div>
           <div class="flex flex-col gap-1">
             <span class="text-xs uppercase tracking-widest" style="color: var(--color-fg-muted);">Social Media</span>
-            <a
-              href="https://www.instagram.com/kisanii.music/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="font-semibold transition-colors"
-              style="color: var(--color-fg);"
-            >@kisanii.music</a>
+            <a href="https://www.instagram.com/kisanii.music/" target="_blank" rel="noopener noreferrer" class="font-semibold transition-colors" style="color: var(--color-fg);">@kisanii.music</a>
           </div>
         </div>
         <a href="mailto:booking@kisanii.ch" class="btn btn-accent self-start">

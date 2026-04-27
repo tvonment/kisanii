@@ -4,6 +4,7 @@ export const ui = {
   de: {
     'nav.home': 'Start',
     'nav.news': 'Aktuelles',
+    'nav.music': 'Musik',
     'nav.live': 'Live',
     'nav.contact': 'Kontakt',
     'nav.epk': 'EPK',
@@ -18,6 +19,7 @@ export const ui = {
     'section.social': 'Social Media',
 
     'section.bio': 'Über mich',
+    'section.music': 'Musik',
 
     'bio.tagline': 'Verletzlich. Authentisch. Unaufhaltsam ehrlich.',
     'bio.text':
@@ -74,6 +76,7 @@ export const ui = {
   en: {
     'nav.home': 'Home',
     'nav.news': 'News',
+    'nav.music': 'Music',
     'nav.live': 'Live',
     'nav.contact': 'Contact',
     'nav.epk': 'EPK',
@@ -88,6 +91,7 @@ export const ui = {
     'section.social': 'Social Media',
 
     'section.bio': 'About',
+    'section.music': 'Music',
 
     'bio.tagline': 'Vulnerable. Authentic. Relentlessly honest.',
     'bio.text':

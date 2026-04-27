@@ -182,9 +182,9 @@ export const concerts: Concert[] = [
 ];
 
 export const upcomingConcerts = concerts
-  .filter((c) => c.status === 'upcoming')
+  .filter((c) => c.date >= new Date().toISOString().slice(0, 10))
   .sort((a, b) => a.date.localeCompare(b.date));
 
 export const pastConcerts = concerts
-  .filter((c) => c.status === 'past')
+  .filter((c) => c.date < new Date().toISOString().slice(0, 10))
   .sort((a, b) => b.date.localeCompare(a.date));

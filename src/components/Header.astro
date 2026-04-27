@@ -11,6 +11,7 @@ const alternatePath = getAlternatePath(currentPath, lang === 'de' ? 'en' : 'de')
 
 const navLinks = [
   { key: 'nav.news' as const, href: withBase(lang === 'de' ? '/#aktuelles' : '/en/#news') },
+  { key: 'nav.music' as const, href: withBase(lang === 'de' ? '/#musik' : '/en/#music') },
   { key: 'nav.live' as const, href: withBase(lang === 'de' ? '/#live' : '/en/#live') },
   { key: 'nav.contact' as const, href: withBase(lang === 'de' ? '/#kontakt' : '/en/#contact') },
 ];
