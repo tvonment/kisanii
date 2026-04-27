@@ -1,0 +1,52 @@
+---
+import type { Concert } from '../data/concerts';
+import { type Lang } from '../i18n/ui';
+
+interface Props {
+  concert: Concert;
+  lang: Lang;
+}
+
+const { concert, lang } = Astro.props;
+
+const dateObj = new Date(concert.date + 'T12:00:00');
+const formattedDate = dateObj.toLocaleDateString(lang === 'de' ? 'de-CH' : 'en-GB', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric',
+});
+---
+
+<div
+  class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-4 border-b"
+  style="border-color: var(--color-border-subtle);"
+>
+  <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-6">
+    <time
+      datetime={concert.date}
+      class="text-xs tabular-nums font-mono uppercase tracking-wider shrink-0 w-28"
+      style="color: var(--color-fg-muted);"
+    >
+      {formattedDate}
+    </time>
+    <div class="flex flex-col gap-0.5">
+      <span class="font-medium text-sm">{concert.title}</span>
+      <span class="text-xs" style="color: var(--color-fg-muted);">
+        {concert.venue}{concert.city ? `, ${concert.city}` : ''}
+      </span>
+    </div>
+  </div>
+
+  {
+    concert.ticketUrl && concert.status === 'upcoming' && (
+      <a
+        href={concert.ticketUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-accent self-start sm:self-auto shrink-0 text-xs"
+      >
+        Tickets
+      </a>
+    )
+  }
+</div>

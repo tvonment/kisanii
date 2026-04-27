@@ -1,0 +1,76 @@
+---
+interface Props {
+  /**
+   * Path to the MP4 source (in /public/video/). WebM with same basename is used as fallback.
+   * Example: "/video/epk.mp4"
+   */
+  src: string;
+  poster?: string;
+  class?: string;
+}
+
+const { src, poster, class: className } = Astro.props;
+const webmSrc = src.replace(/\.mp4$/, '.webm');
+const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<div class:list={['video-wrapper', className]}>
+  <video
+    id={videoId}
+    muted
+    playsinline
+    preload="metadata"
+    poster={poster}
+    aria-label="EPK video"
+  >
+    <source src={webmSrc} type="video/webm" />
+    <source src={src} type="video/mp4" />
+  </video>
+
+  <!-- Unmute toggle -->
+  <button
+    id={`${videoId}-unmute`}
+    class="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded text-xs uppercase tracking-widest transition-all"
+    style="background: rgba(14,11,11,0.75); color: var(--color-fg); border: 1px solid var(--color-border);"
+    aria-label="Unmute video"
+    aria-pressed="false"
+  >
+    <span id={`${videoId}-icon`}>🔇</span>
+    <span id={`${videoId}-label`}>Sound</span>
+  </button>
+</div>
+
+<script is:inline define:vars={{ videoId }}>
+  const video = document.getElementById(videoId);
+  const btn = document.getElementById(`${videoId}-unmute`);
+  const icon = document.getElementById(`${videoId}-icon`);
+
+  if (!video || !btn || !icon) return;
+
+  // IntersectionObserver: play when in viewport, pause otherwise
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {
+            // Autoplay blocked — silently ignore
+          });
+        } else {
+          video.pause();
+        }
+      });
+    },
+    { threshold: 0.4 },
+  );
+
+  observer.observe(video);
+
+  // Mute toggle
+  btn.addEventListener('click', () => {
+    video.muted = !video.muted;
+    const muted = video.muted;
+    icon.textContent = muted ? '🔇' : '🔊';
+    btn.setAttribute('aria-pressed', String(!muted));
+    btn.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
+  });
+</script>

@@ -1,0 +1,7 @@
+# Place compressed video files here before deploying.
+#
+# Required files:
+#   epk.mp4   (H.264, target ≤ 25 MB for GitHub Pages)
+#   epk.webm  (VP9, same content — used as preferred source)
+#
+# Run scripts/encode-video.sh to generate these from the source MOV.

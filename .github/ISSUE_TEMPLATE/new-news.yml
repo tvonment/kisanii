@@ -1,0 +1,40 @@
+name: Neue News / New News Entry
+description: Add a new news item to the website
+labels: [news]
+body:
+  - type: input
+    id: title_de
+    attributes:
+      label: Titel (Deutsch)
+      placeholder: «EP CYCLE» – jetzt auf allen Plattformen
+    validations:
+      required: true
+  - type: input
+    id: title_en
+    attributes:
+      label: Title (English)
+      placeholder: «EP CYCLE» – Out Now on All Platforms
+  - type: input
+    id: date
+    attributes:
+      label: Datum / Date (YYYY-MM-DD)
+      placeholder: "2025-03-13"
+    validations:
+      required: true
+  - type: textarea
+    id: body_de
+    attributes:
+      label: Text (Deutsch)
+      description: Full text of the news item in German (Markdown supported)
+    validations:
+      required: true
+  - type: textarea
+    id: body_en
+    attributes:
+      label: Text (English)
+      description: English translation (Markdown supported)
+  - type: input
+    id: external_url
+    attributes:
+      label: Externer Link / External URL (optional)
+      placeholder: https://...

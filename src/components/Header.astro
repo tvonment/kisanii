@@ -1,0 +1,137 @@
+---
+import { t, getAlternatePath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  currentPath: string;
+}
+
+const { lang, currentPath } = Astro.props;
+const alternatePath = getAlternatePath(currentPath, lang === 'de' ? 'en' : 'de');
+
+const navLinks = [
+  { key: 'nav.news' as const, href: lang === 'de' ? '/#aktuelles' : '/en/#news' },
+  { key: 'nav.live' as const, href: lang === 'de' ? '/#live' : '/en/#live' },
+  { key: 'nav.contact' as const, href: lang === 'de' ? '/#kontakt' : '/en/#contact' },
+];
+---
+
+<header
+  class="sticky top-0 z-50 border-b"
+  style="background: rgba(14, 11, 11, 0.92); backdrop-filter: blur(8px); border-color: var(--color-border-subtle);"
+>
+  <div class="site-container">
+    <nav class="flex items-center justify-between h-16" aria-label="Main navigation">
+      <!-- Wordmark -->
+      <a
+        href={lang === 'de' ? '/' : '/en/'}
+        class="font-display text-xl font-bold tracking-widest uppercase"
+        style="letter-spacing: 0.2em;"
+        aria-label="KISANII – Home"
+      >
+        KISANII
+      </a>
+
+      <!-- Desktop nav -->
+      <ul class="hidden md:flex items-center gap-8 text-sm uppercase tracking-widest">
+        {
+          navLinks.map(({ key, href }) => (
+            <li>
+              <a
+                href={href}
+                class="transition-colors hover:text-accent"
+                style="--hover-color: var(--color-accent);"
+              >
+                {t(lang, key)}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a
+            href={lang === 'de' ? '/epk' : '/en/epk'}
+            class="btn btn-outline text-xs"
+          >
+            {t(lang, 'nav.epk')}
+          </a>
+        </li>
+      </ul>
+
+      <!-- Desktop lang switch + Mobile menu button -->
+      <div class="flex items-center gap-4">
+        <a
+          href={alternatePath}
+          class="hidden md:inline-flex text-xs uppercase tracking-widest transition-colors"
+          style="color: var(--color-fg-muted);"
+          aria-label={t(lang, 'lang.switchlabel')}
+        >
+          {t(lang, 'lang.switch')}
+        </a>
+
+        <!-- Mobile hamburger -->
+        <button
+          id="menu-toggle"
+          class="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-1.5"
+          aria-label={t(lang, 'nav.menu')}
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+        >
+          <span class="block w-5 h-px transition-all" style="background: var(--color-fg);"></span>
+          <span class="block w-5 h-px transition-all" style="background: var(--color-fg);"></span>
+          <span class="block w-5 h-px transition-all" style="background: var(--color-fg);"></span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Mobile nav drawer -->
+  <div
+    id="mobile-nav"
+    aria-hidden="true"
+    class="md:hidden border-t"
+    style="border-color: var(--color-border-subtle); background: var(--color-bg);"
+  >
+    <div class="site-container py-6 flex flex-col gap-6">
+      <ul class="flex flex-col gap-5 text-sm uppercase tracking-widest">
+        {
+          navLinks.map(({ key, href }) => (
+            <li>
+              <a href={href} class="block hover:text-accent transition-colors">
+                {t(lang, key)}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a
+            href={lang === 'de' ? '/epk' : '/en/epk'}
+            class="block hover:text-accent transition-colors"
+            style="color: var(--color-accent);"
+          >
+            {t(lang, 'nav.epk')}
+          </a>
+        </li>
+      </ul>
+      <a
+        href={alternatePath}
+        class="text-xs uppercase tracking-widest"
+        style="color: var(--color-fg-muted);"
+      >
+        {t(lang, 'lang.switch')} – {t(lang, 'lang.switchlabel')}
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const mobileNav = document.getElementById('mobile-nav');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+    if (mobileNav) {
+      mobileNav.setAttribute('aria-hidden', String(isOpen));
+    }
+  });
+</script>

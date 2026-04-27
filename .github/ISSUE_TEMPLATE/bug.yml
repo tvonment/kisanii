@@ -1,0 +1,36 @@
+name: Bug Report
+description: Something is broken on the website
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke, dass du einen Fehler meldest! / Thanks for reporting a bug!
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      description: Which page is affected?
+      placeholder: https://kisanii.ch/...
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Was ist kaputt? / What is broken?
+      description: Describe what you expected to see vs. what you actually see.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Schritte zum Reproduzieren / Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click on ...
+        3. See error
+  - type: input
+    id: browser
+    attributes:
+      label: Browser & OS
+      placeholder: Safari 17 / iOS 17, Chrome 124 / macOS 14

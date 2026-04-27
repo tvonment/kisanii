@@ -1,0 +1,173 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import ConcertRow from '../../components/ConcertRow.astro';
+import { t } from '../../i18n/ui';
+import { upcomingConcerts, pastConcerts } from '../../data/concerts';
+
+const lang = 'en';
+const newsEntries = await getCollection('newsEN');
+const latestNews = newsEntries
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 4);
+
+const description =
+  'Kisanii – Swiss singer-songwriter. Vulnerable, authentic, and relentlessly honest. Upcoming shows, news and more.';
+---
+
+<BaseLayout title="KISANII" description={description} lang={lang}>
+  <!-- ── HERO ──────────────────────────────────────────────── -->
+  <section
+    class="relative flex flex-col justify-center min-h-[80svh] section-gap"
+    style="background: radial-gradient(ellipse at 60% 40%, rgba(234,102,50,0.08) 0%, transparent 60%);"
+  >
+    <div class="site-container flex flex-col gap-8">
+      <div class="flex flex-col gap-4 max-w-2xl">
+        <h1
+          class="font-display text-6xl sm:text-8xl md:text-9xl font-bold leading-none tracking-tight"
+          style="letter-spacing: -0.02em;"
+        >
+          KISANII
+        </h1>
+        <p class="text-lg sm:text-xl max-w-xl leading-relaxed" style="color: var(--color-fg-muted);">
+          Vulnerable, authentic, and relentlessly honest.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-4">
+        <a href="#news" class="btn btn-accent">Latest News</a>
+        <a href="#live" class="btn btn-outline">Shows</a>
+      </div>
+
+      <!-- Streaming links row -->
+      <div class="flex flex-wrap gap-3 mt-4">
+        <a
+          href="https://open.spotify.com/artist/7jMnqSsKuIzLzjgIPtgbwu"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline text-xs"
+        >
+          Spotify
+        </a>
+        <a
+          href="https://music.apple.com/nl/artist/kisanii/1727114509"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline text-xs"
+        >
+          Apple Music
+        </a>
+        <a
+          href="https://linktr.ee/kisanii"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline text-xs"
+        >
+          All Platforms
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BIO ───────────────────────────────────────────────── -->
+  <section id="bio" class="section-gap" style="background: var(--color-surface);">
+    <div class="site-container">
+      <SectionHeading text={t(lang, 'section.bio')} />
+      <div class="max-w-2xl">
+        <p class="text-base sm:text-lg leading-relaxed" style="color: var(--color-fg-muted);">
+          {t(lang, 'bio.text')}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── NEWS ──────────────────────────────────────────────── -->
+  <section id="news" class="section-gap">
+    <div class="site-container">
+      <SectionHeading text={t(lang, 'section.news')} id="news-heading" />
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {
+          latestNews.map((entry) => (
+            <NewsCard
+              lang={lang}
+              title={entry.data.title}
+              date={entry.data.date}
+              summary={entry.data.summary}
+              slug={entry.id}
+              externalUrl={entry.data.externalUrl}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LIVE ──────────────────────────────────────────────── -->
+  <section id="live" class="section-gap" style="background: var(--color-surface);">
+    <div class="site-container">
+      <SectionHeading text={t(lang, 'section.live')} />
+
+      {
+        upcomingConcerts.length > 0 ? (
+          <div class="mb-12">
+            <h3 class="text-xs uppercase tracking-widest mb-4" style="color: var(--color-fg-muted);">
+              {t(lang, 'concerts.upcoming')}
+            </h3>
+            <div>
+              {upcomingConcerts.map((c) => (
+                <ConcertRow concert={c} lang={lang} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p class="mb-12 text-sm" style="color: var(--color-fg-muted);">
+            {t(lang, 'concerts.none')}
+          </p>
+        )
+      }
+
+      <details class="group">
+        <summary
+          class="cursor-pointer text-xs uppercase tracking-widest select-none list-none flex items-center gap-2 mb-4"
+          style="color: var(--color-fg-muted);"
+        >
+          <span class="transition-transform group-open:rotate-90 inline-block" aria-hidden="true">▶</span>
+          {t(lang, 'concerts.past')} ({pastConcerts.length})
+        </summary>
+        <div>
+          {pastConcerts.map((c) => <ConcertRow concert={c} lang={lang} />)}
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ── CONTACT / NEWSLETTER ──────────────────────────────── -->
+  <section id="contact" class="section-gap">
+    <div class="site-container">
+      <SectionHeading text={t(lang, 'section.contact')} />
+      <div class="flex flex-col sm:flex-row gap-12 max-w-2xl">
+        <div class="flex flex-col gap-3">
+          <h3 class="font-display text-xl font-semibold">{t(lang, 'contact.booking')}</h3>
+          <p class="text-sm" style="color: var(--color-fg-muted);">{t(lang, 'contact.bookingdesc')}</p>
+          <a href="mailto:booking@kisanii.ch" class="btn btn-accent self-start">
+            booking@kisanii.ch
+          </a>
+        </div>
+        <div class="flex flex-col gap-3">
+          <h3 class="font-display text-xl font-semibold">{t(lang, 'section.newsletter')}</h3>
+          <p class="text-sm" style="color: var(--color-fg-muted);">{t(lang, 'newsletter.desc')}</p>
+          <a
+            href="http://eepurl.com/i74CvE"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-outline self-start"
+          >
+            {t(lang, 'newsletter.cta')}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

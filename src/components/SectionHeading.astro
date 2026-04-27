@@ -1,0 +1,19 @@
+---
+interface Props {
+  text: string;
+  id?: string;
+  class?: string;
+}
+const { text, id, class: className } = Astro.props;
+---
+
+<div class:list={['flex items-center gap-4 mb-8', className]}>
+  <h2
+    id={id}
+    class="font-display text-xs uppercase tracking-[0.25em] font-semibold"
+    style="color: var(--color-fg-muted);"
+  >
+    {text}
+  </h2>
+  <div class="flex-1 h-px" style="background: var(--color-border);"></div>
+</div>

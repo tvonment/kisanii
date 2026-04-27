@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# EPK is for bookers only — keep out of search indexes
+Disallow: /epk
+Disallow: /en/epk
+
+Sitemap: https://kisanii.ch/sitemap-index.xml

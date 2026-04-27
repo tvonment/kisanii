@@ -1,0 +1,210 @@
+@import "tailwindcss";
+@import "@fontsource-variable/playfair-display";
+@import "@fontsource/dm-sans/400.css";
+@import "@fontsource/dm-sans/500.css";
+
+@theme {
+  /* ── Colour palette (derived from EP cover image.png) ── */
+  --color-bg: #0e0b0b;
+  --color-surface: #1c1212;
+  --color-surface-raised: #261818;
+  --color-border: #3d2020;
+  --color-border-subtle: #2a1616;
+  --color-fg: #f3ece7;
+  --color-fg-muted: #9e7f7a;
+  --color-accent: #ea6632;
+  --color-accent-hover: #d95a29;
+  --color-red: #c8211c;
+
+  /* ── Typography ── */
+  --font-display: "Playfair Display Variable", Georgia, serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+
+  /* ── Spacing / sizing ── */
+  --container-site: 72rem; /* 1152px */
+  --radius-card: 0.5rem;
+}
+
+/* ── Base reset ─────────────────────────────────────────── */
+html {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* ── Focus visible ── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ── Links ── */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Selection ── */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* ── Scrollbar (Webkit) ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fg-muted);
+}
+
+/* ── Utility classes ── */
+.site-container {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .site-container {
+    padding-inline: 2.5rem;
+  }
+}
+
+.section-gap {
+  padding-block: 5rem;
+}
+
+@media (min-width: 768px) {
+  .section-gap {
+    padding-block: 7rem;
+  }
+}
+
+/* ── Typography helpers ── */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.text-muted {
+  color: var(--color-fg-muted);
+}
+
+/* ── Divider ── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ── Card ── */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-card);
+}
+
+/* ── Button variants ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-accent {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+.btn-accent:hover {
+  background: var(--color-accent-hover);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+}
+.btn-outline:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* ── Prose (news body) ── */
+.prose {
+  max-width: 65ch;
+  line-height: 1.75;
+  font-size: 1.0625rem;
+}
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose p {
+  margin-bottom: 1.25rem;
+}
+
+.prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose a:hover {
+  color: var(--color-accent-hover);
+}
+
+/* ── Video player ── */
+.video-wrapper {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Hamburger nav (mobile) ── */
+#mobile-nav[aria-hidden="true"] {
+  display: none;
+}

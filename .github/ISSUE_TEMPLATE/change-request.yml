@@ -1,0 +1,21 @@
+name: Change Request / Änderungswunsch
+description: Request a change to existing content or design
+labels: [enhancement]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Was soll geändert werden? / What should change?
+      description: Be as specific as possible — paste the current text and what it should say instead.
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: URL (optional)
+      placeholder: https://kisanii.ch/...
+  - type: textarea
+    id: why
+    attributes:
+      label: Warum? / Why?
+      description: Context helps prioritise.

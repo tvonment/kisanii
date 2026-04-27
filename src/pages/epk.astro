@@ -1,0 +1,113 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import VideoPlayer from '../components/VideoPlayer.astro';
+import { t } from '../i18n/ui';
+
+const lang = 'de';
+---
+
+<BaseLayout
+  title={t(lang, 'epk.title')}
+  description={t(lang, 'epk.description')}
+  noindex={true}
+  lang={lang}
+>
+  <!-- ── VIDEO HERO ──────────────────────────────────────────── -->
+  <section class="section-gap" style="background: var(--color-bg);">
+    <div class="site-container">
+      <div class="flex flex-col gap-4 mb-8 max-w-2xl">
+        <p
+          class="text-xs uppercase tracking-[0.3em] font-semibold"
+          style="color: var(--color-accent);"
+        >
+          Electronic Press Kit
+        </p>
+        <h1 class="font-display text-4xl sm:text-5xl font-bold">KISANII</h1>
+        <p class="text-base leading-relaxed" style="color: var(--color-fg-muted);">
+          {t(lang, 'epk.subtitle')}
+        </p>
+      </div>
+
+      <VideoPlayer src="/video/epk.mp4" class="max-w-4xl" />
+    </div>
+  </section>
+
+  <!-- ── BIO ──────────────────────────────────────────────────── -->
+  <section class="section-gap" style="background: var(--color-surface);">
+    <div class="site-container">
+      <SectionHeading text={t(lang, 'section.bio')} />
+      <div class="grid md:grid-cols-2 gap-12 max-w-4xl">
+        <div class="flex flex-col gap-4">
+          <p class="text-base leading-relaxed" style="color: var(--color-fg-muted);">
+            {t(lang, 'bio.text')}
+          </p>
+        </div>
+        <div class="flex flex-col gap-4">
+          <h3 class="text-xs uppercase tracking-widest font-semibold" style="color: var(--color-fg-muted);">
+            {t(lang, 'epk.streaming')}
+          </h3>
+          <div class="flex flex-col gap-2">
+            <a
+              href="https://open.spotify.com/artist/7jMnqSsKuIzLzjgIPtgbwu"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-outline self-start"
+            >
+              Spotify
+            </a>
+            <a
+              href="https://music.apple.com/nl/artist/kisanii/1727114509"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-outline self-start"
+            >
+              Apple Music
+            </a>
+            <a
+              href="https://linktr.ee/kisanii"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-outline self-start"
+            >
+              Linktree
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRESS KIT ──────────────────────────────────────────── -->
+  <section class="section-gap">
+    <div class="site-container">
+      <SectionHeading text={t(lang, 'epk.presskit')} />
+      <div
+        class="card p-8 max-w-lg flex flex-col gap-4 items-start"
+        style="border-color: var(--color-border);"
+      >
+        <p class="text-sm" style="color: var(--color-fg-muted);">
+          {t(lang, 'epk.presskit.placeholder')}
+        </p>
+        <a href="mailto:booking@kisanii.ch" class="btn btn-accent">
+          {t(lang, 'contact.email')} →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BOOKING ────────────────────────────────────────────── -->
+  <section class="section-gap" style="background: var(--color-surface);">
+    <div class="site-container">
+      <SectionHeading text={t(lang, 'contact.booking')} />
+      <div class="flex flex-col gap-4 max-w-lg">
+        <p class="text-base leading-relaxed" style="color: var(--color-fg-muted);">
+          {t(lang, 'contact.bookingdesc')}
+        </p>
+        <a href="mailto:booking@kisanii.ch" class="btn btn-accent self-start">
+          booking@kisanii.ch
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

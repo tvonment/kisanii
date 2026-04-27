@@ -1,0 +1,38 @@
+name: Neues Konzert hinzufügen / Add New Concert
+description: A new show date should be added to the website
+labels: [concert]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Konzertname / Show name
+      placeholder: Wohnzimmerkonzert, Stadtfest Arbon, …
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Datum / Date
+      description: Format YYYY-MM-DD
+      placeholder: "2025-10-08"
+    validations:
+      required: true
+  - type: input
+    id: venue
+    attributes:
+      label: Veranstaltungsort / Venue
+      placeholder: Presswerk Arbon
+    validations:
+      required: true
+  - type: input
+    id: city
+    attributes:
+      label: Stadt / City
+      placeholder: Arbon, CH
+    validations:
+      required: true
+  - type: input
+    id: ticket_url
+    attributes:
+      label: Ticket URL (optional)
+      placeholder: https://...
