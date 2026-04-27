@@ -34,7 +34,29 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
     {trackSrcWithBase && <track kind="subtitles" src={trackSrcWithBase} srclang="en" label="English" default />}
   </video>
 
-  <!-- Unmute toggle -->
+  <!-- Click-to-unmute overlay -->
+  <div
+    id={`${videoId}-overlay`}
+    class="absolute inset-0 flex flex-col items-center justify-center cursor-pointer"
+    style="background: linear-gradient(to top, rgba(14,11,11,0.55) 0%, transparent 60%);"
+    role="button"
+    aria-label="Click to unmute"
+  >
+    <div class="flex flex-col items-center gap-3 mt-auto mb-10">
+      <div
+        class="w-16 h-16 rounded-full flex items-center justify-center text-2xl"
+        style="background: var(--color-accent); box-shadow: 0 0 0 6px rgba(234,102,50,0.25);"
+      >
+        🔊
+      </div>
+      <span
+        class="text-xs uppercase tracking-[0.25em] font-semibold px-4 py-1.5 rounded-full"
+        style="background: rgba(14,11,11,0.7); color: var(--color-fg);"
+      >Sound einschalten</span>
+    </div>
+  </div>
+
+  <!-- Mute toggle (corner) -->
   <button
     id={`${videoId}-unmute`}
     class="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded text-xs uppercase tracking-widest transition-all"
@@ -43,7 +65,7 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
     aria-pressed="false"
   >
     <span id={`${videoId}-icon`}>🔇</span>
-    <span id={`${videoId}-label`}>Sound</span>
+    <span>Sound</span>
   </button>
 </div>
 
@@ -51,6 +73,7 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
   const video = document.getElementById(videoId);
   const btn = document.getElementById(`${videoId}-unmute`);
   const icon = document.getElementById(`${videoId}-icon`);
+  const overlay = document.getElementById(`${videoId}-overlay`);
 
   if (!video || !btn || !icon) return;
 
@@ -59,9 +82,7 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          video.play().catch(() => {
-            // Autoplay blocked — silently ignore
-          });
+          video.play().catch(() => {});
         } else {
           video.pause();
         }
@@ -72,8 +93,23 @@ const videoId = `vp-${Math.random().toString(36).slice(2, 9)}`;
 
   observer.observe(video);
 
-  // Mute toggle
+  function unmute() {
+    video.muted = false;
+    icon.textContent = '🔊';
+    btn.setAttribute('aria-pressed', 'true');
+    btn.setAttribute('aria-label', 'Mute video');
+    if (overlay) overlay.style.display = 'none';
+    video.play().catch(() => {});
+  }
+
+  // Click-to-unmute overlay
+  if (overlay) {
+    overlay.addEventListener('click', unmute);
+  }
+
+  // Corner mute toggle
   btn.addEventListener('click', () => {
+    if (overlay) overlay.style.display = 'none';
     video.muted = !video.muted;
     const muted = video.muted;
     icon.textContent = muted ? '🔇' : '🔊';

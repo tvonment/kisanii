@@ -75,10 +75,18 @@ const description =
   <section id="bio" class="section-gap" style="background: var(--color-surface);">
     <div class="site-container">
       <SectionHeading text={t(lang, 'section.bio')} />
-      <div class="max-w-2xl">
+      <div class="grid md:grid-cols-2 gap-12 max-w-4xl items-center">
         <p class="text-base sm:text-lg leading-relaxed" style="color: var(--color-fg-muted);">
           {t(lang, 'bio.text')}
         </p>
+        <div class="relative rounded-lg overflow-hidden" style="aspect-ratio: 3/4;">
+          <img
+            src="https://picsum.photos/seed/kisanii-portrait/600/800"
+            alt="Kisanii"
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
       </div>
     </div>
   </section>

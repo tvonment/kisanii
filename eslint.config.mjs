@@ -7,6 +7,11 @@ export default [
   eslint.configs.recommended,
   ...astroPlugin.configs.recommended,
   {
+    languageOptions: {
+      globals: { URL: 'readonly' },
+    },
+  },
+  {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: tsParser,
