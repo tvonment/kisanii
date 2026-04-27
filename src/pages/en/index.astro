@@ -158,14 +158,29 @@ const description =
         <div class="flex flex-col gap-3">
           <h3 class="font-display text-xl font-semibold">{t(lang, 'section.newsletter')}</h3>
           <p class="text-sm" style="color: var(--color-fg-muted);">{t(lang, 'newsletter.desc')}</p>
-          <a
-            href="http://eepurl.com/i74CvE"
+          <form
+            action="https://kisanii.us16.list-manage.com/subscribe/post?u=3d23a4c57b3ae204454609652&id=468b01f4ba&f_id=0033a2e1f0"
+            method="post"
             target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-outline self-start"
+            class="flex flex-col sm:flex-row gap-3 mt-1"
           >
-            {t(lang, 'newsletter.cta')}
-          </a>
+            <input
+              type="email"
+              name="EMAIL"
+              required
+              autocomplete="email"
+              placeholder={t(lang, 'newsletter.email')}
+              class="px-4 py-2.5 rounded text-sm w-full sm:w-64 outline-none focus:ring-2"
+              style="background: var(--color-surface-raised); border: 1px solid var(--color-border); color: var(--color-fg); --tw-ring-color: var(--color-accent);"
+            />
+            {/* Honeypot — must stay hidden */}
+            <div style="position:absolute;left:-5000px;" aria-hidden="true">
+              <input type="text" name="b_3d23a4c57b3ae204454609652_468b01f4ba" tabindex="-1" value="" />
+            </div>
+            <button type="submit" class="btn btn-accent shrink-0">
+              {t(lang, 'newsletter.subscribe')}
+            </button>
+          </form>
         </div>
       </div>
     </div>
