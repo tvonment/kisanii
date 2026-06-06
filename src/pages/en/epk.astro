@@ -11,8 +11,13 @@ import { upcomingConcerts, pastConcerts } from '../../data/concerts';
 const lang = 'en';
 
 const pressGlob = import.meta.glob<{ default: ImageMetadata }>('../../assets/images/pressefotos/*.{jpg,jpeg}', { eager: true });
-const pressPhotos = Object.entries(pressGlob).sort(([a], [b]) => a.localeCompare(b)).map(([, m]) => m.default);
-const portrait = pressPhotos[0];
+const pressPhotos = Object.entries(pressGlob)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([key, m]) => ({
+    img: m.default,
+    downloadUrl: `/press/${key.split('/').pop()}`,
+  }));
+const portrait = pressPhotos[0]?.img;
 ---
 
 <BaseLayout
@@ -145,16 +150,25 @@ const portrait = pressPhotos[0];
 
       {pressPhotos.length > 0 && (
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
-          {pressPhotos.map((photo) => (
-            <div class="rounded-lg overflow-hidden" style="aspect-ratio: 1;">
-              <Image
-                src={photo}
-                alt={t(lang, 'bio.portrait.alt')}
-                class="w-full h-full object-cover"
-                loading="lazy"
-                widths={[400, 700]}
-                sizes="(min-width: 640px) 33vw, 50vw"
-              />
+          {pressPhotos.map(({ img, downloadUrl }) => (
+            <div class="flex flex-col gap-2">
+              <div class="rounded-lg overflow-hidden" style="aspect-ratio: 1;">
+                <Image
+                  src={img}
+                  alt={t(lang, 'bio.portrait.alt')}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                  widths={[400, 700]}
+                  sizes="(min-width: 640px) 33vw, 50vw"
+                />
+              </div>
+              <a
+                href={downloadUrl}
+                download
+                class="btn btn-outline text-xs self-start"
+              >
+                ↓ Download
+              </a>
             </div>
           ))}
         </div>
