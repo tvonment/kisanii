@@ -20,8 +20,11 @@ export const ui = {
 
     'section.bio': 'Über mich',
     'section.music': 'Musik',
+    'section.photos': 'Fotos',
 
     'bio.tagline': 'Verletzlich. Authentisch. Unaufhaltsam ehrlich.',
+    'bio.portrait.alt': 'Kisanii – Porträt',
+    'photos.alt': 'Kisanii – Foto',
     'bio.text':
       'Kisanii ist verletzlich, authentisch und unaufhaltsam ehrlich. Mit viel Platz für eigene Gedanken nimmt sie ihre Hörerschaft mit auf eine Reise in emotionale Abgründe und berauschende Höhenflüge. Ihre starke Stimme lässt Herzen höher schlagen. Musikalisch überrascht sie mit mutigen Wendungen und einem Sound, der Genre-Grenzen spielerisch hinter sich lässt.',
 
@@ -92,8 +95,11 @@ export const ui = {
 
     'section.bio': 'About',
     'section.music': 'Music',
+    'section.photos': 'Photos',
 
     'bio.tagline': 'Vulnerable. Authentic. Relentlessly honest.',
+    'bio.portrait.alt': 'Kisanii – Portrait',
+    'photos.alt': 'Kisanii – Photo',
     'bio.text':
       'Kisanii is vulnerable, authentic, and relentlessly honest. Leaving plenty of room for personal reflection, she takes her audience on a journey through emotional depths and intoxicating highs. Her powerful voice sets hearts racing. Musically, she surprises with bold turns and a sound that playfully transcends genre boundaries.',
 

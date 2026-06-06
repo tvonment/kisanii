@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint . --max-warnings 0",
+    "images": "node scripts/process-images.js",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

@@ -7,3 +7,7 @@ dist/
 
 # Raw video source (too large for GitHub)
 video/
+images-raw/
+
+# macOS metadata
+**/.DS_Store
