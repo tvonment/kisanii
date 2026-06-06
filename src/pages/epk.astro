@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import VideoPlayer from '../components/VideoPlayer.astro';
@@ -7,6 +9,10 @@ import { t } from '../i18n/ui';
 import { upcomingConcerts, pastConcerts } from '../data/concerts';
 
 const lang = 'de';
+
+const pressGlob = import.meta.glob<{ default: ImageMetadata }>('../assets/images/pressefotos/*.{jpg,jpeg}', { eager: true });
+const pressPhotos = Object.entries(pressGlob).sort(([a], [b]) => a.localeCompare(b)).map(([, m]) => m.default);
+const portrait = pressPhotos[0];
 ---
 
 <BaseLayout
@@ -80,15 +86,16 @@ const lang = 'de';
           </div>
         </div>
         <div class="relative rounded-lg overflow-hidden" style="aspect-ratio: 3/4;">
-          <img
-            src="https://picsum.photos/seed/kisanii-portrait/500/667"
-            alt="Kisanii – Pressefoto (Platzhalter)"
-            class="w-full h-full object-cover"
-            loading="lazy"
-          />
-          <p class="absolute bottom-3 right-3 text-xs px-2 py-1 rounded" style="background: rgba(14,11,11,0.75); color: var(--color-fg-muted);">
-            Pressefoto folgt
-          </p>
+          {portrait && (
+            <Image
+              src={portrait}
+              alt={t(lang, 'bio.portrait.alt')}
+              class="w-full h-full object-cover"
+              loading="eager"
+              widths={[500, 900]}
+              sizes="(min-width: 768px) 50vw, 100vw"
+            />
+          )}
         </div>
       </div>
     </div>
@@ -137,23 +144,22 @@ const lang = 'de';
         </footer>
       </blockquote>
 
-      <h3 class="text-xs uppercase tracking-widest mb-4" style="color: var(--color-fg-muted);">
-        Pressefotos — echte Fotos folgen in Kürze
-      </h3>
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
-        {
-          ['a', 'b', 'c'].map((s) => (
+      {pressPhotos.length > 0 && (
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+          {pressPhotos.map((photo) => (
             <div class="rounded-lg overflow-hidden" style="aspect-ratio: 1;">
-              <img
-                src={`https://picsum.photos/seed/kisanii-press-${s}/400/400`}
-                alt="Pressefoto Platzhalter"
+              <Image
+                src={photo}
+                alt={t(lang, 'bio.portrait.alt')}
                 class="w-full h-full object-cover"
                 loading="lazy"
+                widths={[400, 700]}
+                sizes="(min-width: 640px) 33vw, 50vw"
               />
             </div>
-          ))
-        }
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 
