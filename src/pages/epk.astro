@@ -152,23 +152,27 @@ const portrait = pressPhotos[0]?.img;
       {pressPhotos.length > 0 && (
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
           {pressPhotos.map(({ img, downloadUrl }) => (
-            <div class="flex flex-col gap-2">
-              <div class="rounded-lg overflow-hidden" style="aspect-ratio: 1;">
-                <Image
-                  src={img}
-                  alt={t(lang, 'bio.portrait.alt')}
-                  class="w-full h-full object-cover"
-                  loading="lazy"
-                  widths={[400, 700]}
-                  sizes="(min-width: 640px) 33vw, 50vw"
-                />
-              </div>
+            <div class="relative rounded-lg overflow-hidden" style="aspect-ratio: 1;">
+              <Image
+                src={img}
+                alt={t(lang, 'bio.portrait.alt')}
+                class="w-full h-full object-cover"
+                loading="lazy"
+                widths={[400, 700]}
+                sizes="(min-width: 640px) 33vw, 50vw"
+              />
               <a
                 href={downloadUrl}
                 download
-                class="btn btn-outline text-xs self-start"
+                aria-label="Foto herunterladen"
+                class="absolute bottom-2 right-2 p-2 rounded-md transition-opacity opacity-60 hover:opacity-100"
+                style="background: rgba(14,11,11,0.7);"
               >
-                ↓ Download
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
               </a>
             </div>
           ))}
