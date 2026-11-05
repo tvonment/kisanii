@@ -128,9 +128,19 @@ const description =
     </div>
   </section>
 
+  <!-- ── LIVE ──────────────────────────────────────────────── -->
+  <section id="live" class="section-gap" style="background: var(--color-surface);">
+    <div class="site-container">
+      <SectionHeading text={t(lang, 'section.live')} />
+
+      <!-- Loaded live from Bandsintown -->
+      <BandsintownConcerts lang={lang} collapsiblePast />
+    </div>
+  </section>
+
   <!-- ── PHOTOS ──────────────────────────────────────────── -->
   {galleryImages.length > 0 && (
-    <section id="photos" class="section-gap" style="background: var(--color-surface);">
+    <section id="photos" class="section-gap">
       <div class="site-container">
         <SectionHeading text={t(lang, 'section.photos')} />
         <div class="columns-2 sm:columns-3 gap-3">
@@ -152,7 +162,7 @@ const description =
   )}
 
   <!-- ── NEWS ──────────────────────────────────────────────── -->
-  <section id="news" class="section-gap">
+  <section id="news" class="section-gap" style="background: var(--color-surface);">
     <div class="site-container">
       <SectionHeading text={t(lang, 'section.news')} id="news-heading" />
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -169,16 +179,6 @@ const description =
           ))
         }
       </div>
-    </div>
-  </section>
-
-  <!-- ── LIVE ──────────────────────────────────────────────── -->
-  <section id="live" class="section-gap" style="background: var(--color-surface);">
-    <div class="site-container">
-      <SectionHeading text={t(lang, 'section.live')} />
-
-      <!-- Loaded live from Bandsintown -->
-      <BandsintownConcerts lang={lang} collapsiblePast />
     </div>
   </section>
 

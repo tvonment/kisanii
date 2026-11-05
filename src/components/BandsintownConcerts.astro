@@ -1,6 +1,6 @@
 ---
 import { t, type Lang } from '../i18n/ui';
-import { BANDSINTOWN_ARTIST_URL } from '../data/bandsintown';
+import { BANDSINTOWN_ARTIST_URL, bandsintownFollowUrl } from '../data/bandsintown';
 
 interface Props {
   lang: Lang;
@@ -21,6 +21,7 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
   data-none={t(lang, 'concerts.none')}
   data-error={t(lang, 'concerts.error')}
   data-tickets={t(lang, 'concert.tickets')}
+  data-nearby={t(lang, 'concerts.nearby')}
 >
   <p data-bit-status class="mb-6 text-sm" style="color: var(--color-fg-muted);">
     {t(lang, 'concerts.loading')}
@@ -38,17 +39,17 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
     <div data-bit-list></div>
   </div>
 
-  <a
-    data-bit-follow
-    href={BANDSINTOWN_ARTIST_URL}
-    target="_blank"
-    rel="noopener noreferrer"
-    class="inline-block mb-12 text-xs uppercase tracking-widest underline underline-offset-4"
-    style="color: var(--color-fg-muted);"
-    hidden
-  >
-    {t(lang, 'concerts.follow')} →
-  </a>
+  <div data-bit-follow class="mb-12 flex flex-wrap items-center gap-3" hidden>
+    <a
+      href={bandsintownFollowUrl(lang)}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn btn-outline text-xs uppercase"
+    >
+      {t(lang, 'concerts.follow')}
+    </a>
+    <span class="text-xs" style="color: var(--color-fg-muted);">{t(lang, 'concerts.followdesc')}</span>
+  </div>
 
   {
     collapsiblePast ? (
@@ -80,10 +81,57 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
     BANDSINTOWN_ARTIST_NAME,
     BANDSINTOWN_ARTIST_URL,
     BANDSINTOWN_EVENTS_URL,
+    BANDSINTOWN_EVENTS_V4_URL,
+    BANDSINTOWN_GEOIP_URL,
     type BandsintownEvent,
   } from '../data/bandsintown';
 
+  type Coords = { latitude: number; longitude: number };
+
+  const NEARBY_KM = 100;
   const containers = document.querySelectorAll<HTMLElement>('[data-bit-concerts]');
+
+  function distanceKm(a: Coords, b: Coords): number {
+    const rad = (deg: number) => (deg * Math.PI) / 180;
+    const dLat = rad(b.latitude - a.latitude);
+    const dLon = rad(b.longitude - a.longitude);
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.latitude)) * Math.cos(rad(b.latitude)) * Math.sin(dLon / 2) ** 2;
+    return 2 * 6371 * Math.asin(Math.sqrt(h));
+  }
+
+  function fetchVisitorCoords(): Promise<Coords | null> {
+    return fetch(BANDSINTOWN_GEOIP_URL)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((c) => (c && Number.isFinite(c.latitude) && Number.isFinite(c.longitude) ? (c as Coords) : null))
+      .catch(() => null);
+  }
+
+  // Event id → real venue name (see BANDSINTOWN_EVENTS_V4_URL). Optional: empty on failure.
+  function fetchVenueNames(): Promise<Map<string, string>> {
+    return fetch(BANDSINTOWN_EVENTS_V4_URL)
+      .then((res) => (res.ok ? (res.json() as Promise<BandsintownEvent[]>) : []))
+      .then((evs) => new Map(evs.map((e) => [e.id, e.venue.name])))
+      .catch(() => new Map());
+  }
+
+  function venueLine(e: BandsintownEvent, title: string, venueNames: Map<string, string>): string {
+    let name = [venueNames.get(e.id), e.venue.name].find((n) => n && n !== title);
+    // Named event whose venue name got replaced by the title: show the address so the location is still there.
+    if (!name && e.title) name = e.venue.street_address;
+    return [name, e.venue.city].filter(Boolean).join(', ');
+  }
+
+  function nearbyBadge(km: number, label: string): HTMLElement {
+    const badge = document.createElement('span');
+    badge.className = 'inline-flex items-center gap-1.5 text-xs mt-1';
+    badge.style.color = 'var(--color-accent)';
+    const dot = document.createElement('span');
+    dot.className = 'inline-block w-1.5 h-1.5 rounded-full';
+    dot.style.background = 'var(--color-accent)';
+    dot.setAttribute('aria-hidden', 'true');
+    badge.append(dot, `${label} · ${Math.max(1, Math.round(km))} km`);
+    return badge;
+  }
 
   function eventTitle(e: BandsintownEvent): string {
     if (e.title) return e.title;
@@ -97,7 +145,14 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
   }
 
   // Same markup as the former ConcertRow component.
-  function renderRow(e: BandsintownEvent, lang: string, upcoming: boolean, ticketsLabel: string): HTMLElement {
+  function renderRow(
+    e: BandsintownEvent,
+    lang: string,
+    upcoming: boolean,
+    ticketsLabel: string,
+    venueNames: Map<string, string>,
+    nearby?: { coords: Coords; label: string },
+  ): HTMLElement {
     const date = e.datetime.slice(0, 10);
     const title = eventTitle(e);
 
@@ -126,8 +181,16 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
     const venueEl = document.createElement('span');
     venueEl.className = 'text-xs';
     venueEl.style.color = 'var(--color-fg-muted)';
-    venueEl.textContent = [e.venue.name !== title ? e.venue.name : '', e.venue.city].filter(Boolean).join(', ');
+    venueEl.textContent = venueLine(e, title, venueNames);
     text.append(titleEl, venueEl);
+
+    if (nearby && e.venue.latitude && e.venue.longitude) {
+      const km = distanceKm(nearby.coords, {
+        latitude: Number(e.venue.latitude),
+        longitude: Number(e.venue.longitude),
+      });
+      if (km <= NEARBY_KM) text.append(nearbyBadge(km, nearby.label));
+    }
 
     left.append(time, text);
     row.append(left);
@@ -145,8 +208,14 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
     return row;
   }
 
-  function render(container: HTMLElement, events: BandsintownEvent[]) {
-    const { lang = 'de', pastLimit, none = '', tickets = 'Tickets' } = container.dataset;
+  function render(
+    container: HTMLElement,
+    events: BandsintownEvent[],
+    venueNames: Map<string, string>,
+    coords: Coords | null,
+  ) {
+    const { lang = 'de', pastLimit, none = '', tickets = 'Tickets', nearby: nearbyLabel = '' } = container.dataset;
+    const nearby = coords ? { coords, label: nearbyLabel } : undefined;
     const today = new Date().toLocaleDateString('sv-SE'); // YYYY-MM-DD, local time
     const upcoming = events
       .filter((e) => e.datetime.slice(0, 10) >= today)
@@ -163,7 +232,7 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
     if (upcoming.length > 0) {
       status.hidden = true;
       upcomingEl.querySelector('[data-bit-list]')!.replaceChildren(
-        ...upcoming.map((e) => renderRow(e, lang, true, tickets)),
+        ...upcoming.map((e) => renderRow(e, lang, true, tickets, venueNames, nearby)),
       );
       upcomingEl.hidden = false;
     } else {
@@ -173,7 +242,7 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
     container.querySelector<HTMLElement>('[data-bit-follow]')!.hidden = false;
 
     if (past.length > 0) {
-      pastEl.querySelector('[data-bit-list]')!.replaceChildren(...past.map((e) => renderRow(e, lang, false, tickets)));
+      pastEl.querySelector('[data-bit-list]')!.replaceChildren(...past.map((e) => renderRow(e, lang, false, tickets, venueNames)));
       const count = pastEl.querySelector('[data-bit-count]');
       if (count) count.textContent = String(past.length);
       pastEl.hidden = false;
@@ -192,12 +261,12 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
   }
 
   if (containers.length > 0) {
-    fetch(BANDSINTOWN_EVENTS_URL)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Bandsintown: HTTP ${res.status}`);
-        return res.json() as Promise<BandsintownEvent[]>;
-      })
-      .then((events) => containers.forEach((c) => render(c, events)))
+    const events = fetch(BANDSINTOWN_EVENTS_URL).then((res) => {
+      if (!res.ok) throw new Error(`Bandsintown: HTTP ${res.status}`);
+      return res.json() as Promise<BandsintownEvent[]>;
+    });
+    Promise.all([events, fetchVenueNames(), fetchVisitorCoords()])
+      .then(([evs, venueNames, coords]) => containers.forEach((c) => render(c, evs, venueNames, coords)))
       .catch((err) => {
         console.warn(err);
         containers.forEach(renderError);
