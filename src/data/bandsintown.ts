@@ -6,8 +6,6 @@ export const BANDSINTOWN_ARTIST_URL = `https://www.bandsintown.com/a/${BANDSINTO
 export const BANDSINTOWN_EVENTS_URL = `https://rest.bandsintown.com/artists/id_${BANDSINTOWN_ARTIST_ID}/events?app_id=${BANDSINTOWN_APP_ID}&date=all`;
 // With "Event Listings: Event Name" the default API overwrites venue.name with the event title; V4 keeps the real venue.
 export const BANDSINTOWN_EVENTS_V4_URL = `https://rest.bandsintown.com/V4/artists/id_${BANDSINTOWN_ARTIST_ID}/events/?app_id=${BANDSINTOWN_APP_ID}&date=all`;
-// IP-based location lookup used by the Bandsintown widget for "near me" (no browser permission prompt).
-export const BANDSINTOWN_GEOIP_URL = `https://rest.bandsintown.com/V4/geoip-lookup?app_id=${BANDSINTOWN_APP_ID}`;
 
 // Same follow link the Bandsintown widget builds. The signature is "ZZ" + sha256("<artistId>--opt--<spn>")
 // with spn = false (artist doesn't collect phone numbers).
@@ -33,6 +31,6 @@ export type BandsintownEvent = {
   datetime: string; // local venue time, e.g. 2026-11-06T20:30:00
   title: string;
   lineup: string[];
-  venue: { name: string; city: string; street_address: string; latitude: string; longitude: string };
+  venue: { name: string; city: string; street_address: string };
   offers: { type: string; status: string; url: string }[];
 };
