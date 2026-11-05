@@ -1,0 +1,206 @@
+---
+import { t, type Lang } from '../i18n/ui';
+import { BANDSINTOWN_ARTIST_URL } from '../data/bandsintown';
+
+interface Props {
+  lang: Lang;
+  pastLimit?: number;
+  collapsiblePast?: boolean;
+  labels?: { upcoming?: string; past?: string };
+}
+
+const { lang, pastLimit, collapsiblePast = false, labels = {} } = Astro.props;
+const upcomingLabel = labels.upcoming ?? t(lang, 'concerts.upcoming');
+const pastLabel = labels.past ?? t(lang, 'concerts.past');
+---
+
+<div
+  data-bit-concerts
+  data-lang={lang}
+  data-past-limit={pastLimit}
+  data-none={t(lang, 'concerts.none')}
+  data-error={t(lang, 'concerts.error')}
+  data-tickets={t(lang, 'concert.tickets')}
+>
+  <p data-bit-status class="mb-6 text-sm" style="color: var(--color-fg-muted);">
+    {t(lang, 'concerts.loading')}
+  </p>
+  <noscript>
+    <a href={BANDSINTOWN_ARTIST_URL} target="_blank" rel="noopener noreferrer" class="text-sm underline">
+      {t(lang, 'concerts.error')}
+    </a>
+  </noscript>
+
+  <div data-bit-upcoming class="mb-6" hidden>
+    <h3 class="text-xs uppercase tracking-widest mb-4" style="color: var(--color-fg-muted);">
+      {upcomingLabel}
+    </h3>
+    <div data-bit-list></div>
+  </div>
+
+  <a
+    data-bit-follow
+    href={BANDSINTOWN_ARTIST_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="inline-block mb-12 text-xs uppercase tracking-widest underline underline-offset-4"
+    style="color: var(--color-fg-muted);"
+    hidden
+  >
+    {t(lang, 'concerts.follow')} →
+  </a>
+
+  {
+    collapsiblePast ? (
+      <details data-bit-past class="group" hidden>
+        <summary
+          class="cursor-pointer text-xs uppercase tracking-widest select-none list-none flex items-center gap-2 mb-4"
+          style="color: var(--color-fg-muted);"
+        >
+          <span class="transition-transform group-open:rotate-90 inline-block" aria-hidden="true">
+            ▶
+          </span>
+          {pastLabel} (<span data-bit-count />)
+        </summary>
+        <div data-bit-list />
+      </details>
+    ) : (
+      <div data-bit-past hidden>
+        <h3 class="text-xs uppercase tracking-widest mb-4" style="color: var(--color-fg-muted);">
+          {pastLabel}
+        </h3>
+        <div data-bit-list />
+      </div>
+    )
+  }
+</div>
+
+<script>
+  import {
+    BANDSINTOWN_ARTIST_NAME,
+    BANDSINTOWN_ARTIST_URL,
+    BANDSINTOWN_EVENTS_URL,
+    type BandsintownEvent,
+  } from '../data/bandsintown';
+
+  const containers = document.querySelectorAll<HTMLElement>('[data-bit-concerts]');
+
+  function eventTitle(e: BandsintownEvent): string {
+    if (e.title) return e.title;
+    const others = e.lineup.filter((name) => name.toLowerCase() !== BANDSINTOWN_ARTIST_NAME.toLowerCase());
+    return others.length > 0 ? `${BANDSINTOWN_ARTIST_NAME} + ${others.join(', ')}` : e.venue.name;
+  }
+
+  function ticketUrl(e: BandsintownEvent): string | undefined {
+    const offer = e.offers.find((o) => o.status === 'available') ?? e.offers[0];
+    return offer?.url.startsWith('https://') ? offer.url : undefined;
+  }
+
+  // Same markup as the former ConcertRow component.
+  function renderRow(e: BandsintownEvent, lang: string, upcoming: boolean, ticketsLabel: string): HTMLElement {
+    const date = e.datetime.slice(0, 10);
+    const title = eventTitle(e);
+
+    const row = document.createElement('div');
+    row.className = 'flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-4 border-b';
+    row.style.borderColor = 'var(--color-border-subtle)';
+
+    const left = document.createElement('div');
+    left.className = 'flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-6';
+
+    const time = document.createElement('time');
+    time.dateTime = date;
+    time.className = 'text-xs tabular-nums font-mono uppercase tracking-wider shrink-0 w-28';
+    time.style.color = 'var(--color-fg-muted)';
+    time.textContent = new Date(date + 'T12:00:00').toLocaleDateString(lang === 'de' ? 'de-CH' : 'en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+
+    const text = document.createElement('div');
+    text.className = 'flex flex-col gap-0.5';
+    const titleEl = document.createElement('span');
+    titleEl.className = 'font-medium text-sm';
+    titleEl.textContent = title;
+    const venueEl = document.createElement('span');
+    venueEl.className = 'text-xs';
+    venueEl.style.color = 'var(--color-fg-muted)';
+    venueEl.textContent = [e.venue.name !== title ? e.venue.name : '', e.venue.city].filter(Boolean).join(', ');
+    text.append(titleEl, venueEl);
+
+    left.append(time, text);
+    row.append(left);
+
+    const url = upcoming ? ticketUrl(e) : undefined;
+    if (url) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.className = 'btn btn-accent self-start sm:self-auto shrink-0 text-xs';
+      a.textContent = ticketsLabel;
+      row.append(a);
+    }
+    return row;
+  }
+
+  function render(container: HTMLElement, events: BandsintownEvent[]) {
+    const { lang = 'de', pastLimit, none = '', tickets = 'Tickets' } = container.dataset;
+    const today = new Date().toLocaleDateString('sv-SE'); // YYYY-MM-DD, local time
+    const upcoming = events
+      .filter((e) => e.datetime.slice(0, 10) >= today)
+      .sort((a, b) => a.datetime.localeCompare(b.datetime));
+    const pastAll = events
+      .filter((e) => e.datetime.slice(0, 10) < today)
+      .sort((a, b) => b.datetime.localeCompare(a.datetime));
+    const past = pastLimit ? pastAll.slice(0, Number(pastLimit)) : pastAll;
+
+    const status = container.querySelector<HTMLElement>('[data-bit-status]')!;
+    const upcomingEl = container.querySelector<HTMLElement>('[data-bit-upcoming]')!;
+    const pastEl = container.querySelector<HTMLElement>('[data-bit-past]')!;
+
+    if (upcoming.length > 0) {
+      status.hidden = true;
+      upcomingEl.querySelector('[data-bit-list]')!.replaceChildren(
+        ...upcoming.map((e) => renderRow(e, lang, true, tickets)),
+      );
+      upcomingEl.hidden = false;
+    } else {
+      status.textContent = none;
+    }
+
+    container.querySelector<HTMLElement>('[data-bit-follow]')!.hidden = false;
+
+    if (past.length > 0) {
+      pastEl.querySelector('[data-bit-list]')!.replaceChildren(...past.map((e) => renderRow(e, lang, false, tickets)));
+      const count = pastEl.querySelector('[data-bit-count]');
+      if (count) count.textContent = String(past.length);
+      pastEl.hidden = false;
+    }
+  }
+
+  function renderError(container: HTMLElement) {
+    const status = container.querySelector<HTMLElement>('[data-bit-status]')!;
+    const link = document.createElement('a');
+    link.href = BANDSINTOWN_ARTIST_URL;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.className = 'underline';
+    link.textContent = container.dataset.error ?? '';
+    status.replaceChildren(link);
+  }
+
+  if (containers.length > 0) {
+    fetch(BANDSINTOWN_EVENTS_URL)
+      .then((res) => {
+        if (!res.ok) throw new Error(`Bandsintown: HTTP ${res.status}`);
+        return res.json() as Promise<BandsintownEvent[]>;
+      })
+      .then((events) => containers.forEach((c) => render(c, events)))
+      .catch((err) => {
+        console.warn(err);
+        containers.forEach(renderError);
+      });
+  }
+</script>

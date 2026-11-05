@@ -41,6 +41,9 @@ export const ui = {
     'concerts.upcoming': 'Bevorstehende Konzerte',
     'concerts.past': 'Vergangene Konzerte',
     'concerts.none': 'Aktuell sind keine Konzerte geplant.',
+    'concerts.loading': 'Konzerte werden geladen …',
+    'concerts.error': 'Konzerte auf Bandsintown ansehen',
+    'concerts.follow': 'Auf Bandsintown folgen',
 
     'contact.booking': 'Buchung',
     'contact.email': 'booking@kisanii.ch',
@@ -116,6 +119,9 @@ export const ui = {
     'concerts.upcoming': 'Upcoming Shows',
     'concerts.past': 'Past Concerts',
     'concerts.none': 'No upcoming shows at the moment.',
+    'concerts.loading': 'Loading shows …',
+    'concerts.error': 'See shows on Bandsintown',
+    'concerts.follow': 'Follow on Bandsintown',
 
     'contact.booking': 'Booking',
     'contact.email': 'booking@kisanii.ch',

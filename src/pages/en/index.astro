@@ -5,9 +5,8 @@ import type { ImageMetadata } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionHeading from '../../components/SectionHeading.astro';
 import NewsCard from '../../components/NewsCard.astro';
-import ConcertRow from '../../components/ConcertRow.astro';
+import BandsintownConcerts from '../../components/BandsintownConcerts.astro';
 import { t } from '../../i18n/ui';
-import { upcomingConcerts, pastConcerts } from '../../data/concerts';
 
 const portraitGlob = import.meta.glob<{ default: ImageMetadata }>('../../assets/images/pressefotos/*.{jpg,jpeg}', { eager: true });
 const portrait = Object.values(portraitGlob)[0]?.default;
@@ -178,37 +177,8 @@ const description =
     <div class="site-container">
       <SectionHeading text={t(lang, 'section.live')} />
 
-      {
-        upcomingConcerts.length > 0 ? (
-          <div class="mb-12">
-            <h3 class="text-xs uppercase tracking-widest mb-4" style="color: var(--color-fg-muted);">
-              {t(lang, 'concerts.upcoming')}
-            </h3>
-            <div>
-              {upcomingConcerts.map((c) => (
-                <ConcertRow concert={c} lang={lang} />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <p class="mb-12 text-sm" style="color: var(--color-fg-muted);">
-            {t(lang, 'concerts.none')}
-          </p>
-        )
-      }
-
-      <details class="group">
-        <summary
-          class="cursor-pointer text-xs uppercase tracking-widest select-none list-none flex items-center gap-2 mb-4"
-          style="color: var(--color-fg-muted);"
-        >
-          <span class="transition-transform group-open:rotate-90 inline-block" aria-hidden="true">▶</span>
-          {t(lang, 'concerts.past')} ({pastConcerts.length})
-        </summary>
-        <div>
-          {pastConcerts.map((c) => <ConcertRow concert={c} lang={lang} />)}
-        </div>
-      </details>
+      <!-- Loaded live from Bandsintown -->
+      <BandsintownConcerts lang={lang} collapsiblePast />
     </div>
   </section>
 
