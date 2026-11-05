@@ -131,8 +131,10 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
     const date = e.datetime.slice(0, 10);
     const title = eventTitle(e);
 
+    const eventUrl = e.url.startsWith('https://www.bandsintown.com/') ? e.url : undefined;
+
     const row = document.createElement('div');
-    row.className = 'flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-4 border-b';
+    row.className = 'group relative flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-4 border-b';
     row.style.borderColor = 'var(--color-border-subtle)';
 
     const left = document.createElement('div');
@@ -150,9 +152,17 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
 
     const text = document.createElement('div');
     text.className = 'flex flex-col gap-0.5';
-    const titleEl = document.createElement('span');
+    // With an event page, the title link's ::after covers the whole row (Tickets button sits above it).
+    const titleEl = document.createElement(eventUrl ? 'a' : 'span');
     titleEl.className = 'font-medium text-sm';
     titleEl.textContent = title;
+    if (eventUrl && titleEl instanceof HTMLAnchorElement) {
+      titleEl.href = eventUrl;
+      titleEl.target = '_blank';
+      titleEl.rel = 'noopener noreferrer';
+      titleEl.className +=
+        ' transition-colors group-hover:text-[var(--color-accent)] after:absolute after:inset-0 after:content-[""]';
+    }
     const venueEl = document.createElement('span');
     venueEl.className = 'text-xs';
     venueEl.style.color = 'var(--color-fg-muted)';
@@ -168,7 +178,7 @@ const pastLabel = labels.past ?? t(lang, 'concerts.past');
       a.href = url;
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
-      a.className = 'btn btn-accent self-start sm:self-auto shrink-0 text-xs';
+      a.className = 'btn btn-accent relative z-10 self-start sm:self-auto shrink-0 text-xs';
       a.textContent = ticketsLabel;
       row.append(a);
     }

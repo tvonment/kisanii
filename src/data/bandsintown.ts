@@ -30,6 +30,7 @@ export type BandsintownEvent = {
   id: string;
   datetime: string; // local venue time, e.g. 2026-11-06T20:30:00
   title: string;
+  url: string; // event page on bandsintown.com
   lineup: string[];
   venue: { name: string; city: string; street_address: string };
   offers: { type: string; status: string; url: string }[];
