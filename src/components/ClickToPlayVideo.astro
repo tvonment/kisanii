@@ -1,0 +1,67 @@
+---
+/**
+ * Click-to-play video with native controls (seek bar, volume, fullscreen).
+ * Use for longer clips that should play with sound on demand. For the muted
+ * autoplay teaser, use VideoPlayer instead.
+ */
+interface Props {
+  /**
+   * Path to the MP4 source (in /public/video/). WebM with same basename is used as preferred source.
+   * Example: "/video/live-chor.mp4"
+   */
+  src: string;
+  /** Poster image shown before playback, e.g. "/video/live-chor.jpg" */
+  poster?: string;
+  /** Accessible name of the video */
+  title: string;
+  class?: string;
+  lang?: 'de' | 'en';
+}
+
+const { src, poster, title, class: className, lang = 'de' } = Astro.props;
+const playLabel = lang === 'en' ? 'Play video' : 'Video abspielen';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const mp4Src = base + src;
+const webmSrc = base + src.replace(/\.mp4$/, '.webm');
+const posterSrc = poster ? base + poster : undefined;
+---
+
+<div class:list={['video-wrapper', className]} data-click-to-play>
+  <video controls playsinline preload="none" poster={posterSrc} aria-label={title}>
+    <source src={webmSrc} type="video/webm" />
+    <source src={mp4Src} type="video/mp4" />
+  </video>
+
+  <!-- Play overlay: hidden once playback starts, then native controls take over -->
+  <button
+    type="button"
+    class="absolute inset-0 flex items-center justify-center cursor-pointer"
+    style="background: linear-gradient(to top, rgba(14,11,11,0.45) 0%, transparent 60%);"
+    aria-label={`${playLabel}: ${title}`}
+    data-play
+  >
+    <span
+      class="w-16 h-16 rounded-full flex items-center justify-center"
+      style="background: var(--color-accent); box-shadow: 0 0 0 6px rgba(234,102,50,0.25); font-size: 1.5rem;"
+    >
+      <i class="fa-solid fa-play" style="color: #fff; margin-left: 0.2rem;" aria-hidden="true"></i>
+    </span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-click-to-play]').forEach((wrapper) => {
+    const video = wrapper.querySelector('video');
+    const playButton = wrapper.querySelector<HTMLButtonElement>('[data-play]');
+    if (!video || !playButton) return;
+
+    playButton.addEventListener('click', () => {
+      video.play().catch(() => {});
+    });
+
+    // Also covers playback started via native controls or keyboard
+    video.addEventListener('play', () => {
+      playButton.style.display = 'none';
+    });
+  });
+</script>

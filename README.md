@@ -84,7 +84,8 @@ public/
 ├── video/
 │   ├── epk.mp4         # Encoded EPK video (H.264)
 │   ├── epk.webm        # Encoded EPK video (VP9)
-│   └── epk.en.vtt      # English subtitles for EPK video
+│   ├── epk.en.vtt      # English subtitles for EPK video
+│   └── live-chor.*     # Live-with-choir video (mp4, webm, jpg poster)
 ├── favicon.svg
 └── robots.txt
 
@@ -140,20 +141,33 @@ Edit `src/data/concerts.ts` and add an entry:
 
 ---
 
-## EPK video
+## Videos
 
-The raw source `video/Kisanii EPK final.mov` is gitignored.
+Raw sources live in the root `video/` folder, which is gitignored. Never put raw files in `public/`: everything there is copied into the build.
+Encoding needs ffmpeg (`brew install ffmpeg`).
 
-To re-encode from source:
+| Video | Raw source | Encoded output | Used in |
+|-------|-----------|----------------|---------|
+| EPK teaser | `video/Kisanii EPK final.mov` | `public/video/epk.{mp4,webm}` | EPK hero (`VideoPlayer`, muted autoplay) |
+| Live mit Chor | `video/Kisanii Live mit Chor Sept. 26.mov` | `public/video/live-chor.{mp4,webm,jpg}` | EPK Video section, before Musik (`ClickToPlayVideo`) |
+
+To encode, pass the source and an output basename (with no arguments, the script re-encodes the EPK teaser):
 
 ```bash
-bash scripts/encode-video.sh
+bash scripts/encode-video.sh                                                    # EPK teaser
+bash scripts/encode-video.sh "video/Kisanii Live mit Chor Sept. 26.mov" live-chor
 ```
 
-Outputs `public/video/epk.mp4` (H.264) and `public/video/epk.webm` (VP9).
-Target: ≤ 25 MB per file (GitHub Pages limit).
+This writes `public/video/<name>.mp4` (H.264) and `public/video/<name>.webm` (VP9), scaled to at most 720p.
+Target: ≤ 25 MB per file. If a file comes out bigger, re-run with a higher CRF, e.g. `CRF_X264=30 CRF_VP9=38 bash scripts/encode-video.sh …`.
 
-To add/update English subtitles, edit `public/video/epk.en.vtt`.
+To grab a poster frame for a click-to-play video:
+
+```bash
+ffmpeg -ss 00:01:30 -i "video/<source>.mov" -frames:v 1 -vf "scale=1280:-2" -q:v 3 public/video/<name>.jpg
+```
+
+To add/update English subtitles for the EPK teaser, edit `public/video/epk.en.vtt`.
 
 ---
 

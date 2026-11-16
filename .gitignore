@@ -6,7 +6,7 @@ dist/
 !.env.example
 
 # Raw video source (too large for GitHub)
-video/
+/video/
 images-raw/
 
 # macOS metadata
