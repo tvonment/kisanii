@@ -50,6 +50,8 @@ const posterSrc = poster ? base + poster : undefined;
 </div>
 
 <script>
+  const players = document.querySelectorAll<HTMLVideoElement>('[data-click-to-play] video');
+
   document.querySelectorAll<HTMLElement>('[data-click-to-play]').forEach((wrapper) => {
     const video = wrapper.querySelector('video');
     const playButton = wrapper.querySelector<HTMLButtonElement>('[data-play]');
@@ -62,6 +64,10 @@ const posterSrc = poster ? base + poster : undefined;
     // Also covers playback started via native controls or keyboard
     video.addEventListener('play', () => {
       playButton.style.display = 'none';
+      // Only one video plays at a time
+      players.forEach((other) => {
+        if (other !== video) other.pause();
+      });
     });
   });
 </script>

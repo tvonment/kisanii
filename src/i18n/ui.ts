@@ -69,6 +69,7 @@ export const ui = {
     'epk.unmute': 'Ton an',
     'epk.mute': 'Ton aus',
     'epk.liveVideo': 'Live mit Chor · Sept. 2026',
+    'epk.fullBandVideo': 'Live mit Full-Band · Sept. 2026',
 
     'footer.copyright': '© Kisanii',
     'footer.madewithlove': 'Mit ♥ gemacht',
@@ -149,6 +150,7 @@ export const ui = {
     'epk.unmute': 'Unmute',
     'epk.mute': 'Mute',
     'epk.liveVideo': 'Live with choir · Sept. 2026',
+    'epk.fullBandVideo': 'Live with full band · Sept. 2026',
 
     'footer.copyright': '© Kisanii',
     'footer.madewithlove': 'Made with ♥',

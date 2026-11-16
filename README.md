@@ -149,7 +149,10 @@ Encoding needs ffmpeg (`brew install ffmpeg`).
 | Video | Raw source | Encoded output | Used in |
 |-------|-----------|----------------|---------|
 | EPK teaser | `video/Kisanii EPK final.mov` | `public/video/epk.{mp4,webm}` | EPK hero (`VideoPlayer`, muted autoplay) |
-| Live mit Chor | `video/Kisanii Live mit Chor Sept. 26.mov` | `public/video/live-chor.{mp4,webm,jpg}` | EPK Video section, before Musik (`ClickToPlayVideo`) |
+| Live mit Chor | `video/Kisanii Live mit Chor Sept. 26.mov` | `public/video/live-chor.{mp4,webm,jpg}` | EPK Videos section, before Musik (`ClickToPlayVideo`) |
+| Live mit Full-Band | `video/Kisanii mit Full-Band September 26.mov` | `public/video/live-band.{mp4,webm,jpg}` | EPK Videos section, before Musik (`ClickToPlayVideo`) |
+
+To add another video to the EPK Videos section, encode it, add a poster and a caption key in `src/i18n/ui.ts`, then add an entry to the `liveVideos` list at the top of both `src/pages/epk.astro` and `src/pages/en/epk.astro`.
 
 To encode, pass the source and an output basename (with no arguments, the script re-encodes the EPK teaser):
 

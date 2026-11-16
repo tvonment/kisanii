@@ -6,9 +6,14 @@ import SectionHeading from '../components/SectionHeading.astro';
 import VideoPlayer from '../components/VideoPlayer.astro';
 import ClickToPlayVideo from '../components/ClickToPlayVideo.astro';
 import BandsintownConcerts from '../components/BandsintownConcerts.astro';
-import { t } from '../i18n/ui';
+import { t, type UIKey } from '../i18n/ui';
 
 const lang = 'de';
+
+const liveVideos: { slug: string; key: UIKey }[] = [
+  { slug: 'live-chor', key: 'epk.liveVideo' },
+  { slug: 'live-band', key: 'epk.fullBandVideo' },
+];
 
 const pressGlob = import.meta.glob<{ default: ImageMetadata }>('../assets/images/pressefotos/*.{jpg,jpeg}', { eager: true });
 const pressPhotos = Object.entries(pressGlob)
@@ -109,13 +114,17 @@ const portrait = pressPhotos[0]?.img;
   <!-- ── LIVE-VIDEO ─────────────────────────────────────────── -->
   <section class="section-gap" style="background: var(--color-surface);">
     <div class="site-container">
-      <SectionHeading text="Video" />
-      <figure class="max-w-3xl mx-auto">
-        <ClickToPlayVideo src="/video/live-chor.mp4" poster="/video/live-chor.jpg" title={t(lang, 'epk.liveVideo')} lang={lang} />
-        <figcaption class="mt-3 text-xs uppercase tracking-widest text-center" style="color: var(--color-fg-muted);">
-          {t(lang, 'epk.liveVideo')}
-        </figcaption>
-      </figure>
+      <SectionHeading text="Videos" />
+      <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        {liveVideos.map(({ slug, key }) => (
+          <figure>
+            <ClickToPlayVideo src={`/video/${slug}.mp4`} poster={`/video/${slug}.jpg`} title={t(lang, key)} lang={lang} />
+            <figcaption class="mt-3 text-xs uppercase tracking-widest text-center" style="color: var(--color-fg-muted);">
+              {t(lang, key)}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
     </div>
   </section>
 
